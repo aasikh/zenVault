@@ -13,7 +13,10 @@ public class ZenVaultApplication {
 		JwtService jwtService = new JwtService();
 		String token =  jwtService.generateToken(2L);
 		System.out.println(token);
-		
+
+	boolean valid = jwtService.validateToken("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwiaWF0IjoxNzcyNzAyMzgzLCJleHAiOjE3NzI3MDU5ODN9.y9-dI9FFswOr1nhAdnRmjIDxBAqBEXxzzdTVcEtatps");
+		System.out.println(valid);
+
 	}
 
 }
