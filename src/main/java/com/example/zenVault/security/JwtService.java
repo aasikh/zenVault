@@ -1,6 +1,7 @@
 package com.example.zenVault.security;
 
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtParserBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -28,11 +29,23 @@ public class JwtService {
             .setSigningKey(key)
             .build()
             .parseClaimsJws(token);
-    return true;
-}catch(Exception e){
-    return false;
-}
+           return true;
+    }catch(Exception e){
+      return false;
+   }
 
+    }
+    public Claims extractAllClaims(String token){
+
+        return Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+    }
+    public Long extractUserIDFromToken(String token){
+        Claims claim = extractAllClaims(token);
+       return Long.parseLong(claim.getSubject());
     }
 
 }
