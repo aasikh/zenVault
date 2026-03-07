@@ -1,23 +1,35 @@
 package com.example.zenVault.entity;
 
+import jakarta.persistence.*;
+
 import java.time.LocalDate;
 
 @Entity
-@Table(name="Users")
+@Table(name = "users")
 public class UserEntity {
-    private Long ID;
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Long id;
+
+    @Column(name = "name", nullable = false, length = 50)
     private String name;
 
-    private String Number;
+    @Column(name = "email", nullable = false, unique = true, length = 100)
+    private String email;
 
-    private String Email;
+    @Column(name = "contact_number", nullable = false, unique = true, length = 10)
+    private String contactNumber;
 
+    @Column(name = "password", nullable = false, length = 255)
     private String password;
 
-    private Enum role;
+    @Column(name = "role", nullable = false, length = 20)
+    private String role;
 
-    private Enum status;
+    @Column(name = "status", nullable = false)
+    private Boolean status;
 
-    private LocalDate creatAt;
+    // getters and setters
 }
