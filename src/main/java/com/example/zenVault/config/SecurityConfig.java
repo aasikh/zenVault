@@ -20,15 +20,15 @@ this.jwtFilter = jwtFilter;
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/**").authenticated()
                         .anyRequest().authenticated()
                 );
-        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+//        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
      return http.build();
     }
-
+@Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder(){
 
         return new BCryptPasswordEncoder();
