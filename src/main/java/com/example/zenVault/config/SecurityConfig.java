@@ -31,6 +31,9 @@ this.jwtFilter = jwtFilter;
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/register").permitAll()
                         .requestMatchers("/api/auth/login").permitAll()
+                        .requestMatchers("/", "/index.html").permitAll()
+                        .requestMatchers("/", "/register.html", "/css/**", "/dashboard.html").permitAll()
+                        .requestMatchers("/register").permitAll()
                         .anyRequest().authenticated()
                 );
 
