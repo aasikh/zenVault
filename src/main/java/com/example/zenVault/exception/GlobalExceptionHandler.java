@@ -3,45 +3,47 @@ package com.example.zenVault.exception;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(UserAlreadyExistsException.class)
-    public ResponseEntity<ApiErrorResponse> handleUserExists(UserAlreadyExistsException ex) {
-
-        ApiErrorResponse error =
-                new ApiErrorResponse(HttpStatus.CONFLICT.value(), ex.getMessage());
-
-        return new ResponseEntity<>(error, HttpStatus.CONFLICT);
-    }
-
-    @ExceptionHandler(InvalidCredentialsException.class)
-    public ResponseEntity<ApiErrorResponse> handleInvalidCredentials(InvalidCredentialsException ex) {
-
-        ApiErrorResponse error =
-                new ApiErrorResponse(HttpStatus.UNAUTHORIZED.value(), ex.getMessage());
-
-        return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
-    }
-
+    // ① Handles: blank name, wrong email format, password < 6 chars
+    // Triggered automatically by @Valid in your controller
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ApiErrorResponse> handleValidation(
+    public ResponseEntity<Map<String, String>> handleValidationErrors(
             MethodArgumentNotValidException ex) {
 
-        String message = ex.getBindingResult()
-                .getFieldError()
-                .getDefaultMessage();
-
-        ApiErrorResponse error =
-                new ApiErrorResponse(400, message);
-
-        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getFieldErrors().forEach(error ->
+                errors.put(error.getField(), error.getDefaultMessage())
+        );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
-    @ExceptionHandler(UserNotFound.class)
-    public ResponseEntity<ApiErrorResponse> handleUserNotFound(UserNotFound us){
-         ApiErrorResponse error = new ApiErrorResponse(HttpStatus.NOT_FOUND.value(), us.getMessage());
-         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+
+    // ② Handles: email already registered
+    // You manually throw this in AuthService
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    public ResponseEntity<Map<String, String>> handleUserAlreadyExists(
+            UserAlreadyExistsException ex) {
+
+        Map<String, String> error = new HashMap<>();
+        error.put("error", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+    }
+
+    // ③ Handles: wrong URL like /api/auth/registe (typo) → 404
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<Map<String, String>> handleUrlNotFound(
+            NoResourceFoundException ex) {
+
+        Map<String, String> error = new HashMap<>();
+        error.put("error", "URL not found: " + ex.getResourcePath());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 }
