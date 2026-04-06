@@ -5,6 +5,8 @@ import com.example.zenVault.security.JwtFilter;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -31,14 +33,10 @@ this.jwtFilter = jwtFilter;
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/register").permitAll()
                         .requestMatchers("/api/auth/login").permitAll()
-                        .requestMatchers("/", "/index.html").permitAll()
-                        .requestMatchers("/", "/register.html", "/css/**", "/dashboard.html").permitAll()
-                        .requestMatchers("/register").permitAll()
                         .anyRequest().authenticated()
                 );
 
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
-
         return http.build();
     }
 @Bean
@@ -46,6 +44,11 @@ this.jwtFilter = jwtFilter;
 
         return new BCryptPasswordEncoder();
     }
+//    @Bean
+//    public AuthenticationManager authenticationManager(
+//            AuthenticationConfiguration config) throws Exception {
+//        return config.getAuthenticationManager();
+//    }
 }
 
 

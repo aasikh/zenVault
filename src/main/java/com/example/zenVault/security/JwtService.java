@@ -11,27 +11,30 @@ import java.security.Key;
 import java.util.Date;
 @Service
 public class JwtService {
-    private String secretKey = "mysecratekeymysecratekeymysecratekey";
-    Key key = Keys.hmacShaKeyFor(secretKey.getBytes());
-    private Long expiration = 1000*60*60L;
+    private final String secretKey = "mysecratekeymysecratekeymysecratekey";
+    private final Long expiration = 1000*60*60L;
 
+    private Key getSigningKey(){
+        return Keys.hmacShaKeyFor(secretKey.getBytes());
+    }
     public String generateToken(Long userId) {
         String token = Jwts.builder()
                 .setSubject(String.valueOf(userId))
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
-                .signWith(key)
+                .signWith(getSigningKey())
                 .compact();
         return token;
     }
     public boolean validateToken(String token) {
     try{
     Jwts.parserBuilder()
-            .setSigningKey(key)
+            .setSigningKey(getSigningKey())
             .build()
             .parseClaimsJws(token);
            return true;
     }catch(Exception e){
+        System.out.println("token validation failed" + e.getMessage());
       return false;
    }
 
@@ -39,7 +42,7 @@ public class JwtService {
     public Claims extractAllClaims(String token){
 
         return Jwts.parserBuilder()
-                .setSigningKey(key)
+                .setSigningKey(getSigningKey())
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
