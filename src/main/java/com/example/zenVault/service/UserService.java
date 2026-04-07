@@ -5,7 +5,9 @@ import com.example.zenVault.dto.LoginResponseDto;
 import com.example.zenVault.dto.RegisterRequestDto;
 import com.example.zenVault.dto.RegisterResponseDto;
 import com.example.zenVault.entity.UserEntity;
+import com.example.zenVault.exception.InvalidCredential;
 import com.example.zenVault.exception.UserAlreadyExistsException;
+import com.example.zenVault.exception.UserNotFound;
 import com.example.zenVault.repository.UserRepository;
 import com.example.zenVault.security.JwtService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -47,11 +49,12 @@ private final JwtService jwtService;
     public LoginResponseDto login(LoginRequestDto request){
          Optional<UserEntity> existUser = userRepository.findByEmail(request.getEmail());
           if(existUser.isEmpty()){
-              throw new RuntimeException("User not found");
+              throw new UserNotFound("User not found " + request.getEmail());
           }
+
         UserEntity userEntity = existUser.get();
           if(!passwordEncoder.matches(request.getPassword(), userEntity.getPassword())){
-              throw new RuntimeException("Invalid password");
+              throw new InvalidCredential("Invalid Credentials");
           }
           LoginResponseDto response = new LoginResponseDto();
           String token = jwtService.generateToken(userEntity.getId());

@@ -37,13 +37,18 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
     }
 
-    // ③ Handles: wrong URL like /api/auth/registe (typo) → 404
-    @ExceptionHandler(NoResourceFoundException.class)
-    public ResponseEntity<Map<String, String>> handleUrlNotFound(
-            NoResourceFoundException ex) {
-
+    @ExceptionHandler(UserNotFound.class)
+    public ResponseEntity<Map<String, String>> handleUserNotFound(UserNotFound ex){
         Map<String, String> error = new HashMap<>();
-        error.put("error", "URL not found: " + ex.getResourcePath());
+        error.put("Error", ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
+
+    @ExceptionHandler(InvalidCredential.class)
+    public ResponseEntity<Map <String, String> > handleInvalidCredential(InvalidCredential ex){
+        Map<String, String> error = new HashMap<>();
+        error.put("Error", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+    }
+
 }

@@ -19,7 +19,7 @@ public UserController(UserService userService) {
 }
 
     @PostMapping("/register")
-    public RegisterResponseDto register(@RequestBody RegisterRequestDto request) {
+    public RegisterResponseDto register(@Valid @RequestBody RegisterRequestDto request) {
         return userService.register(request);
     }
 
