@@ -40,6 +40,7 @@ public AccountService(UserRepository userRepository, AccountRepository accountRe
           responseDto.setId(saved.getId());
           responseDto.setAccountType(saved.getAccountType());
           responseDto.setBalance(saved.getBalance());
+          responseDto.setAccountNumber(saved.getAccountNumber());
           return responseDto;
     }
     private String genrateAccountNumber(){

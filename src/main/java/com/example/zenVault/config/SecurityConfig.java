@@ -39,16 +39,11 @@ this.jwtFilter = jwtFilter;
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
-@Bean
+    @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder(){
 
         return new BCryptPasswordEncoder();
     }
-//    @Bean
-//    public AuthenticationManager authenticationManager(
-//            AuthenticationConfiguration config) throws Exception {
-//        return config.getAuthenticationManager();
-//    }
 }
 
 
