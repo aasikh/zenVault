@@ -51,4 +51,14 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
     }
 
+    @ExceptionHandler(HeaderMissing.class)
+    public ResponseEntity<Map<String, String>> handleHeaderMissing(HeaderMissing ex) {
+        Map<String, String> map = new HashMap<>();
+        map.put("error", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(map);
+    }
 }
+// header is missing not start from Bearer
+// token is expire
+// token signature is mismatch means fake token
+// user valid token and not expire but access some endpoint which they dont have permission

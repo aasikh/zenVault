@@ -6,6 +6,7 @@ public class AccountResponseDto {
 private Long id;
 private String accountType;
 private double balance;
+private String accountNumber;
 
 //getter and setter
 
@@ -33,5 +34,14 @@ private double balance;
 
     public void setBalance(double balance) {
         this.balance = balance;
+
+    }
+
+    public String getAccountNumber() {
+        return accountNumber;
+    }
+
+    public void setAccountNumber(String accountNumber) {
+        this.accountNumber = accountNumber;
     }
 }
