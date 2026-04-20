@@ -39,7 +39,7 @@ this.jwtFilter = jwtFilter;
                         .anyRequest().authenticated()
                 );
 
-//      http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+      http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
     @Bean
