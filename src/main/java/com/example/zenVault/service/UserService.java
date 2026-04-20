@@ -27,7 +27,9 @@ private final JwtService jwtService;
         this.userRepository = userRepository;
         this.jwtService = jwtService;
     }
+
     public RegisterResponseDto register(RegisterRequestDto request){
+
         Optional<UserEntity> existingUser = userRepository.findByEmail(request.getEmail());
         if(existingUser.isPresent()){
             throw new UserAlreadyExistsException("Email already registered");

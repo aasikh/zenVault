@@ -23,7 +23,7 @@ this.jwtFilter = jwtFilter;
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-        http
+       http
                 .csrf(csrf -> csrf.disable())   // VERY IMPORTANT
                 .formLogin(form -> form.disable())
                 .httpBasic(basic -> basic.disable())
@@ -33,10 +33,13 @@ this.jwtFilter = jwtFilter;
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/register").permitAll()
                         .requestMatchers("/api/auth/login").permitAll()
+                        .requestMatchers( "/home","/register","/processRegister").permitAll()
+                        .requestMatchers("/login", "/loginProcess").permitAll()
+                        .requestMatchers("/error").permitAll()
                         .anyRequest().authenticated()
                 );
 
-        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+//      http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
     @Bean
